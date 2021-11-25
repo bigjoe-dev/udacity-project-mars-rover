@@ -4,6 +4,9 @@ const bodyParser = require('body-parser')
 const fetch = require('node-fetch')
 const path = require('path')
 
+// Add moment for time format
+const moment = require('moment')
+
 const app = express()
 const port = 3000
 
@@ -50,6 +53,12 @@ app.get('/rovers', async (req, res) => {
     } catch (err) {
         console.log('error:', err)
     }
+})
+
+// Endpoint to get images based on rover name
+app.get('/rover-images', (req, res) => {
+    const rover = req.query.rover
+    res.send('ok')
 })
 
 
