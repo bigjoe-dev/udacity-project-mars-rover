@@ -1,7 +1,7 @@
 let store = {
     user: { name: "Student" },
     apod: '',
-    rovers: ['Curiosity', 'Opportunity', 'Spirit'],
+    rovers: [],
 }
 
 // add our markup to the page
@@ -45,6 +45,8 @@ const App = (state) => {
 
 // listening for load event because page should load before any JS is called
 window.addEventListener('load', () => {
+    getRovers(store)
+    console.log('store:', store)
     render(root, store)
 })
 
@@ -63,6 +65,8 @@ const Greeting = (name) => {
     `
 }
 
+
+
 // Example of a pure function that renders infomation requested from the backend
 const ImageOfTheDay = (apod) => {
 
@@ -75,7 +79,6 @@ const ImageOfTheDay = (apod) => {
     if (!apod || apod.date === today.getDate() ) {
         getImageOfTheDay(store)
     }
-
     // check if the photo of the day is actually type video!
     if (apod.media_type === "video") {
         return (`
@@ -102,4 +105,12 @@ const getImageOfTheDay = (state) => {
         .then(apod => updateStore(store, { apod }))
 
     return data
+}
+
+const getRovers = (state) => {
+    let { rovers } = state
+
+    fetch(`http://localhost:3000/rovers`)
+        .then(res => res.json())
+        .then(rovers => updateStore(store, { rovers: rovers.rovers }))
 }
