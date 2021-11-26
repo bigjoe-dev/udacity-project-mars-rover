@@ -37,6 +37,7 @@ const App = (state) => {
                     but generally help with discoverability of relevant imagery.
                 </p>
                 ${ImageOfTheDay(apod)}
+                ${Rovers(rovers)}
             </section>
         </main>
         <footer></footer>
@@ -65,7 +66,12 @@ const Greeting = (name) => {
     `
 }
 
-
+// Render rovers to DOM
+const Rovers = (rovers) => {
+    let returnHTML = ''
+    rovers.map((r) => returnHTML += (`<p>${r.name}</p>`))
+    return returnHTML
+}
 
 // Example of a pure function that renders infomation requested from the backend
 const ImageOfTheDay = (apod) => {

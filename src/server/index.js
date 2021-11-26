@@ -22,7 +22,8 @@ const getRoversInfo = (array) => {
             name: r.name, 
             landing_date: r.landing_date,
             launch_date: r.launch_date,
-            status: r.status
+            status: r.status,
+            latest_photos: r.images
         }
     })
 }
@@ -35,9 +36,21 @@ const getMostRecent = async (rover) => {
                 return resJSON 
         })
         return images
+        
     } catch (err) {
         console.log('error:', err)
     }
+}
+
+const getMostRecentArray = async (array) => {
+    const images = await Promise.all(array.map(async (r) => {
+        return await getMostRecent(r.name)
+        .then((ri) => {
+            return {...r, images: ri.latest_photos}
+        })
+    }))
+    console.log(images)
+    return images
 }
 
 
@@ -54,28 +67,21 @@ app.get('/apod', async (req, res) => {
     }
 })
 
-// Endpoint to get rovers
+// Endpoint to get rovers and images
 app.get('/rovers', async (req, res) => {
     try {
         const rovers = await fetch(`https://api.nasa.gov/mars-photos/api/v1/rovers?api_key=${process.env.API_KEY}`)
             .then(async res => {
                 const roversJSON = await res.json()
-                return getRoversInfo(roversJSON.rovers)
+                const images = await getMostRecentArray(roversJSON.rovers)
+
+                return getRoversInfo(images)
             })
+            console.log(rovers)
         res.send({rovers})
     } catch (err) {
         console.log('error:', err)
     }
 })
-
-// Endpoint to get images based on rover name
-app.get('/rover-images', async (req, res) => {
-    const rover = req.query.rover
-    const images = await getMostRecent(rover)
-
-    res.send(images.latest_photos.map((p) => p.img_src ))
-})
-
-
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
