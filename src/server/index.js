@@ -49,7 +49,6 @@ const getMostRecentArray = async (array) => {
             return {...r, images: ri.latest_photos}
         })
     }))
-    console.log(images)
     return images
 }
 
