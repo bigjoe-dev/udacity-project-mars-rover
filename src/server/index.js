@@ -4,9 +4,6 @@ const bodyParser = require('body-parser')
 const fetch = require('node-fetch')
 const path = require('path')
 
-// Add moment for time format
-const moment = require('moment')
-
 const app = express()
 const port = 3000
 

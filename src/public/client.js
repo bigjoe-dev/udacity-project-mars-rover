@@ -76,8 +76,6 @@ const Rovers = (rovers) => {
         </div>
     </div>
     `))
-    
-    console.log(returnHTML)
     return returnHTML
 }
 
