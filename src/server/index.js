@@ -27,17 +27,12 @@ const getRoversInfo = (array) => {
     })
 }
 
-const getMostRecent = async (rover, format, daysPast) => {
+const getMostRecent = async (rover) => {
     try {
-        const images = await fetch(`https://api.nasa.gov/mars-photos/api/v1/rovers/${rover}/photos?earth_date=${moment().subtract(daysPast, 'days').format(format)}&api_key=${process.env.API_KEY}`)
+        const images = await fetch(`https://api.nasa.gov/mars-photos/api/v1/rovers/${rover}/latest_photos?api_key=${process.env.API_KEY}`)
         .then(async res => {
             const resJSON = await res.json()
-            if(resJSON.photos.length === 0) {
-                return getMostRecent(rover, format, daysPast + 1)
-            }
-            else {
-                return resJSON
-            }  
+                return resJSON 
         })
         return images
     } catch (err) {
@@ -76,12 +71,9 @@ app.get('/rovers', async (req, res) => {
 // Endpoint to get images based on rover name
 app.get('/rover-images', async (req, res) => {
     const rover = req.query.rover
-    // Date and time format for NASA API
-    const formatNASA = 'YYYY-MM-DD'
+    const images = await getMostRecent(rover)
 
-    const images = await getMostRecent(rover, formatNASA, 0)
-    
-    res.send(images.photos.map((p) => p.img_src ))
+    res.send(images.latest_photos.map((p) => p.img_src ))
 })
 
 
