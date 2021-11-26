@@ -1,7 +1,8 @@
 let store = {
-    user: { name: "Student" },
+    user: { name: "Joe" },
     apod: '',
     rovers: [],
+    activeTab: ''
 }
 
 // add our markup to the page
@@ -26,17 +27,6 @@ const App = (state) => {
         <main>
             ${Greeting(store.user.name)}
             <section>
-                <h3>Put things on the page!</h3>
-                <p>Here is an example section.</p>
-                <p>
-                    One of the most popular websites at NASA is the Astronomy Picture of the Day. In fact, this website is one of
-                    the most popular websites across all federal agencies. It has the popular appeal of a Justin Bieber video.
-                    This endpoint structures the APOD imagery and associated metadata so that it can be repurposed for other
-                    applications. In addition, if the concept_tags parameter is set to True, then keywords derived from the image
-                    explanation are returned. These keywords could be used as auto-generated hashtags for twitter or instagram feeds;
-                    but generally help with discoverability of relevant imagery.
-                </p>
-                ${ImageOfTheDay(apod)}
                 ${Rovers(rovers)}
             </section>
         </main>
@@ -68,8 +58,26 @@ const Greeting = (name) => {
 
 // Render rovers to DOM
 const Rovers = (rovers) => {
-    let returnHTML = ''
-    rovers.map((r) => returnHTML += (`<p>${r.name}</p>`))
+    let returnHTML = `
+    <div class="tab">
+        <button class="tablinks" onclick="openCity(event, 'Curiosity')">Curiosity</button>
+        <button class="tablinks" onclick="openCity(event, 'Perseverance')">Perseverance</button>
+        <button class="tablinks" onclick="openCity(event, 'Spirit')">Spirit</button>
+        <button class="tablinks" onclick="openCity(event, 'Opportunity')">Opportunity</button>
+    </div>
+    `
+    rovers.map((r) => returnHTML += (`
+    <div id="${r.name}" class="tabcontent">
+        <p>Latest Images</p> 
+        <div class="grid">
+            ${r.latest_photos.reduce((p, c) => {
+                return p += `<img src="${c}" />`
+            }, '')}
+        </div>
+    </div>
+    `))
+    
+    console.log(returnHTML)
     return returnHTML
 }
 
@@ -119,4 +127,27 @@ const getRovers = (state) => {
     fetch(`http://localhost:3000/rovers`)
         .then(res => res.json())
         .then(rovers => updateStore(store, { rovers: rovers.rovers }))
+}
+
+
+
+function openCity(evt, cityName) {
+    // Declare all variables
+    var i, tabcontent, tablinks;
+  
+    // Get all elements with class="tabcontent" and hide them
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+  
+    // Get all elements with class="tablinks" and remove the class "active"
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+  
+    // Show the current tab, and add an "active" class to the button that opened the tab
+    document.getElementById(cityName).style.display = "block";
+    evt.currentTarget.className += " active";
 }

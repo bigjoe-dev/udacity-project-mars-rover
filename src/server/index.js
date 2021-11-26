@@ -46,7 +46,7 @@ const getMostRecentArray = async (array) => {
     const images = await Promise.all(array.map(async (r) => {
         return await getMostRecent(r.name)
         .then((ri) => {
-            return {...r, images: ri.latest_photos}
+            return {...r, images: ri.latest_photos.map((l) => l.img_src)}
         })
     }))
     return images
