@@ -77,7 +77,6 @@ app.get('/rovers', async (req, res) => {
 
                 return getRoversInfo(images)
             })
-            console.log(rovers)
         res.send({rovers})
     } catch (err) {
         console.log('error:', err)
