@@ -38,37 +38,9 @@ footer {
 }
 
 /* -------------------  GALLERY  -------------- */
-
-.myGallery {
-  display: grid;
-  grid-gap: 10px;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-}
-
-.myGallery img {
-  width: 100%;
-}
-
-/*
-  And here are some declarations for the image caption.
-  Just hover over one of the last 5 images to see it.
-*/
-
-.grid { 
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  grid-gap: 20px;
-  align-items: stretch;
-  }
-.grid img {
-  max-width: 100%;
-  height: auto;
-  margin: auto;
-}
-
 .container {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(30vw, 1fr));
   grid-auto-rows: minmax(30vw, 160px);
   grid-gap: 0.5em;
 }
