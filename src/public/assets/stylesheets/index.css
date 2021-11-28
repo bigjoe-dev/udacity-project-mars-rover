@@ -101,3 +101,7 @@ footer {
   border: 1px solid #ccc;
   border-top: none;
 }
+
+.active {
+  display: block;
+}
