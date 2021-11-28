@@ -25,10 +25,12 @@ const App = (state) => {
     return `
         <header></header>
         <main>
+            <a id="top"></a>
             ${Greeting(store.user.name)}
             <section>
                 ${Rovers(rovers)}
             </section>
+            <a href="#top">Back to top</a>
         </main>
         <footer></footer>
     `
@@ -119,7 +121,7 @@ const ImageOfTheDay = (apod) => {
 const getImageOfTheDay = (state) => {
     let { apod } = state
 
-    fetch(`${window.location.href}apod`)
+    fetch(`${window.location.origin}/apod`)
         .then(res => res.json())
         .then(apod => updateStore(store, { apod }))
 
@@ -128,7 +130,7 @@ const getImageOfTheDay = (state) => {
 
 const getRovers = (state) => {
     let { rovers } = state
-    fetch(`${window.location.href}rovers`)
+    fetch(`${window.location.origin}/rovers`)
         .then(res => res.json())
         .then(rovers => updateStore(store, { rovers: rovers.rovers }))
 }
