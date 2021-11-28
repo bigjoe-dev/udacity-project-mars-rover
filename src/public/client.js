@@ -37,7 +37,6 @@ const App = (state) => {
 // listening for load event because page should load before any JS is called
 window.addEventListener('load', () => {
     getRovers(store)
-    console.log('store:', store)
     render(root, store)
 })
 
