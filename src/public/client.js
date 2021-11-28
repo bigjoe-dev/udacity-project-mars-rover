@@ -72,9 +72,13 @@ const Rovers = (rovers) => {
             <li>Status: <b>${r.status}</b></li>
         </ul>
         <h3>Latest Images</h3> 
-        <div class="grid">
+        <div class="container">
             ${r.latest_photos.reduce((p, c) => {
-                return p += `<img src="${c}" />`
+                return p += `
+                <div class="items photos">
+                    <img src="${c}" />
+                </div>
+                `
             }, '')}
         </div>
     </div>
