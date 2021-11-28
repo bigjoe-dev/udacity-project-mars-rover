@@ -28,7 +28,7 @@ const App = (state) => {
             <a id="top"></a>
             ${Greeting(store.user.name)}
             <section>
-                ${Rovers(rovers)}
+                ${Rovers(rovers, Tabs)}
             </section>
             <a href="#top">Back to top</a>
         </main>
@@ -47,7 +47,7 @@ window.addEventListener('load', () => {
 const Greeting = (name) => {
     if (name) {
         return `
-            <h1>Welcome, ${name}!</h1>
+            <h1>Welcome to the Mars Rover Dashboard, ${name}!</h1>
         `
     }
 
@@ -56,8 +56,32 @@ const Greeting = (name) => {
     `
 }
 
+// Tabs for rover content
+const Tabs = (rovers) => {
+    return rovers.map((r) => (`
+            <div id="${r.name}" class="${r.name == store.activeTab ? 'tabcontent active' : 'tabcontent'}">
+                <h3>Name: ${r.name}</h3>
+                <ul>
+                    <li>Launch date: <b>${r.launch_date}</b></li>
+                    <li>Landing date: <b>${r.landing_date}</b></li>
+                    <li>Status: <b>${r.status}</b></li>
+                </ul>
+                <h3>Latest Images</h3> 
+                <div class="container">
+                    ${r.latest_photos.reduce((p, c) => {
+                        return p += `
+                        <div class="items photos">
+                            <img src="${c}" />
+                        </div>
+                        `
+                    }, '')}
+                </div>
+            </div>
+            `)).reduce((p,c) => p += c)
+}
+
 // Render rovers to DOM
-const Rovers = (rovers) => {
+const Rovers = (rovers, tabs) => {
     let returnHTML = `
     <div class="tab">
         ${rovers.reduce((p, c) => {
@@ -65,26 +89,8 @@ const Rovers = (rovers) => {
         }, '')}
     </div>
     `
-    rovers.map((r) => returnHTML += (`
-    <div id="${r.name}" class="${r.name == store.activeTab ? 'tabcontent active' : 'tabcontent'}">
-        <h3>Name: ${r.name}</h3>
-        <ul>
-            <li>Launch date: <b>${r.launch_date}</b></li>
-            <li>Landing date: <b>${r.landing_date}</b></li>
-            <li>Status: <b>${r.status}</b></li>
-        </ul>
-        <h3>Latest Images</h3> 
-        <div class="container">
-            ${r.latest_photos.reduce((p, c) => {
-                return p += `
-                <div class="items photos">
-                    <img src="${c}" />
-                </div>
-                `
-            }, '')}
-        </div>
-    </div>
-    `))
+    returnHTML += tabs(rovers)
+
     return returnHTML
 }
 
