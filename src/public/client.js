@@ -37,7 +37,6 @@ const App = (state) => {
 // listening for load event because page should load before any JS is called
 window.addEventListener('load', () => {
     getRovers(store)
-    render(root, store)
 })
 
 // ------------------------------------------------------  COMPONENTS
@@ -60,7 +59,7 @@ const Rovers = (rovers) => {
     let returnHTML = `
     <div class="tab">
         ${rovers.reduce((p, c) => {
-            return p += `<button class="tablinks" onclick="updateStore(store, { activeTab: '${c.name}' })">${c.name}</button>`
+            return p += `<button class="${c.name == store.activeTab ? 'tablinks active' : 'tablinks'}" onclick="updateStore(store, { activeTab: '${c.name}' })">${c.name}</button>`
         }, '')}
     </div>
     `
@@ -110,7 +109,7 @@ const ImageOfTheDay = (apod) => {
 const getImageOfTheDay = (state) => {
     let { apod } = state
 
-    fetch(`http://localhost:3000/apod`)
+    fetch(`${window.location.href}apod`)
         .then(res => res.json())
         .then(apod => updateStore(store, { apod }))
 
@@ -119,8 +118,7 @@ const getImageOfTheDay = (state) => {
 
 const getRovers = (state) => {
     let { rovers } = state
-
-    fetch(`http://localhost:3000/rovers`)
+    fetch(`${window.location.href}rovers`)
         .then(res => res.json())
         .then(rovers => updateStore(store, { rovers: rovers.rovers }))
 }
