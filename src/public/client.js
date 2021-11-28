@@ -65,7 +65,13 @@ const Rovers = (rovers) => {
     `
     rovers.map((r) => returnHTML += (`
     <div id="${r.name}" class="${r.name == store.activeTab ? 'tabcontent active' : 'tabcontent'}">
-        <p>Latest Images</p> 
+        <h3>Name: ${r.name}</h3>
+        <ul>
+            <li>Launch date: <b>${r.launch_date}</b></li>
+            <li>Landing date: <b>${r.landing_date}</b></li>
+            <li>Status: <b>${r.status}</b></li>
+        </ul>
+        <h3>Latest Images</h3> 
         <div class="grid">
             ${r.latest_photos.reduce((p, c) => {
                 return p += `<img src="${c}" />`
