@@ -75,7 +75,7 @@ const Tabs = (state) => {
             `)).reduce((p,c) => p += c)
 }
 
-// Render rovers to DOM
+// Return HTML for rovers
 const Rovers = (state, tabs) => {
     const { rovers } = state.toJS()
     let returnHTML = `
