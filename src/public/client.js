@@ -18,7 +18,7 @@ const root = document.getElementById('root')
 
 const updateStore = (oldState, newState) => {
     store = oldState.merge(newState)
-    render(root, store.toJS())
+    render(root, store)
 }
 
 const render = async (root, state) => {
@@ -28,8 +28,6 @@ const render = async (root, state) => {
 
 // create content
 const App = (state) => {
-    let { rovers, apod } = state
-
     return `
         <header>
             <h1>Mars Rover Dashboard</h1>
@@ -37,7 +35,7 @@ const App = (state) => {
         <main>
             <a id="top"></a>
             <section>
-                ${Rovers(store, Tabs)}
+                ${Rovers(state, Tabs)}
             </section>
             <a href="#top">Back to top</a>
         </main>
@@ -53,8 +51,8 @@ window.addEventListener('load', () => {
 // ------------------------------------------------------  COMPONENTS
 
 // Tabs for rover content
-const Tabs = (store) => {
-    const { rovers, activeTab } = store.toJS()
+const Tabs = (state) => {
+    const { rovers, activeTab } = state.toJS()
     return rovers.map((r) => (`
             <div id="${r.name}" class="${r.name == activeTab ? 'tabcontent active' : 'tabcontent'}">
                 <h3>Name: ${r.name}</h3>
@@ -78,63 +76,23 @@ const Tabs = (store) => {
 }
 
 // Render rovers to DOM
-const Rovers = (store, tabs) => {
-    const { rovers } = store.toJS()
+const Rovers = (state, tabs) => {
+    const { rovers } = state.toJS()
     let returnHTML = `
     <div class="tab">
         ${rovers.reduce((p, c) => {
-            return p += `<button class="${c.name == store.activeTab ? 'tablinks active' : 'tablinks'}" onclick="updateStore(store, { activeTab: '${c.name}' })">${c.name}</button>`
+            return p += `<button class="${c.name == state.activeTab ? 'tablinks active' : 'tablinks'}" onclick="updateStore(store, { activeTab: '${c.name}' })">${c.name}</button>`
         }, '')}
     </div>
     `
-    returnHTML += tabs(store)
+    returnHTML += tabs(state)
 
     return returnHTML
 }
 
-// Example of a pure function that renders infomation requested from the backend
-const ImageOfTheDay = (apod) => {
-
-    // If image does not already exist, or it is not from today -- request it again
-    const today = new Date()
-    const photodate = new Date(apod.date)
-    console.log(photodate.getDate(), today.getDate());
-
-    console.log(photodate.getDate() === today.getDate());
-    if (!apod || apod.date === today.getDate() ) {
-        getImageOfTheDay(store)
-    }
-    // check if the photo of the day is actually type video!
-    if (apod.media_type === "video") {
-        return (`
-            <p>See today's featured video <a href="${apod.url}">here</a></p>
-            <p>${apod.title}</p>
-            <p>${apod.explanation}</p>
-        `)
-    } else {
-        return (`
-            <img src="${apod.image.url}" height="350px" width="100%" />
-            <p>${apod.image.explanation}</p>
-        `)
-    }
-}
-
 // ------------------------------------------------------  API CALLS
-
-// Example API call
-const getImageOfTheDay = (state) => {
-    let { apod } = state
-
-    fetch(`${window.location.origin}/apod`)
-        .then(res => res.json())
-        .then(apod => updateStore(store, { apod }))
-
-    return data
-}
-
 const getRovers = (state) => {
-    let { rovers } = state
     fetch(`${window.location.origin}/rovers`)
         .then(res => res.json())
-        .then(rovers => updateStore(store, { rovers: rovers.rovers }))
+        .then(rovers => updateStore(state, { rovers: rovers.rovers }))
 }
