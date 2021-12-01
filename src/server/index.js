@@ -13,7 +13,7 @@ app.use(bodyParser.json())
 app.use('/', express.static(path.join(__dirname, '../public')))
 
 // Functions
-const getRoversInfo = (array) => {
+const RoversInfo = (array) => {
     return array.map((r) => {
         return {
             name: r.name, 
@@ -52,17 +52,6 @@ const getMostRecentArray = async (array) => {
 
 // your API calls
 
-// example API call
-app.get('/apod', async (req, res) => {
-    try {
-        let image = await fetch(`https://api.nasa.gov/planetary/apod?api_key=${process.env.API_KEY}`)
-            .then(res => res.json())
-        res.send({ image })
-    } catch (err) {
-        console.log('error:', err);
-    }
-})
-
 // Endpoint to get rovers and images
 app.get('/rovers', async (req, res) => {
     try {
@@ -71,7 +60,7 @@ app.get('/rovers', async (req, res) => {
                 const roversJSON = await res.json()
                 const images = await getMostRecentArray(roversJSON.rovers)
 
-                return getRoversInfo(images)
+                return RoversInfo(images)
             })
         res.send({rovers})
     } catch (err) {
