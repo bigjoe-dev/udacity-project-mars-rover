@@ -1,16 +1,24 @@
-let store = {
+/* let store = {
     user: { name: "Joe" },
     apod: '',
     rovers: [],
     activeTab: ''
-}
+} */
+
+let store = Immutable.Map({
+    user: Immutable.Map({ name: "Joe" }),
+    apod: '',
+    rovers: Immutable.List([]),
+    activeTab: ''
+})
+
 
 // add our markup to the page
 const root = document.getElementById('root')
 
-const updateStore = (store, newState) => {
-    store = Object.assign(store, newState)
-    render(root, store)
+const updateStore = (oldState, newState) => {
+    store = oldState.merge(newState)
+    render(root, store.toJS())
 }
 
 const render = async (root, state) => {
@@ -23,12 +31,13 @@ const App = (state) => {
     let { rovers, apod } = state
 
     return `
-        <header></header>
+        <header>
+            <h1>Mars Rover Dashboard</h1>
+        </header>
         <main>
             <a id="top"></a>
-            ${Greeting(store.user.name)}
             <section>
-                ${Rovers(rovers, Tabs)}
+                ${Rovers(store, Tabs)}
             </section>
             <a href="#top">Back to top</a>
         </main>
@@ -43,23 +52,11 @@ window.addEventListener('load', () => {
 
 // ------------------------------------------------------  COMPONENTS
 
-// Pure function that renders conditional information -- THIS IS JUST AN EXAMPLE, you can delete it.
-const Greeting = (name) => {
-    if (name) {
-        return `
-            <h1>Welcome to the Mars Rover Dashboard, ${name}!</h1>
-        `
-    }
-
-    return `
-        <h1>Hello!</h1>
-    `
-}
-
 // Tabs for rover content
-const Tabs = (rovers) => {
+const Tabs = (store) => {
+    const { rovers, activeTab } = store.toJS()
     return rovers.map((r) => (`
-            <div id="${r.name}" class="${r.name == store.activeTab ? 'tabcontent active' : 'tabcontent'}">
+            <div id="${r.name}" class="${r.name == activeTab ? 'tabcontent active' : 'tabcontent'}">
                 <h3>Name: ${r.name}</h3>
                 <ul>
                     <li>Launch date: <b>${r.launch_date}</b></li>
@@ -81,7 +78,8 @@ const Tabs = (rovers) => {
 }
 
 // Render rovers to DOM
-const Rovers = (rovers, tabs) => {
+const Rovers = (store, tabs) => {
+    const { rovers } = store.toJS()
     let returnHTML = `
     <div class="tab">
         ${rovers.reduce((p, c) => {
@@ -89,7 +87,7 @@ const Rovers = (rovers, tabs) => {
         }, '')}
     </div>
     `
-    returnHTML += tabs(rovers)
+    returnHTML += tabs(store)
 
     return returnHTML
 }
