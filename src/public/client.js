@@ -22,11 +22,11 @@ const render = async (root, state) => {
 // create content
 const App = (state) => {
     return `
+        <a id="top"></a>
         <header>
             <h1>Mars Rover Dashboard</h1>
         </header>
-        <main>
-            <a id="top"></a>
+        <main> 
             <section>
                 ${Rovers(state, Tabs)}
             </section>
