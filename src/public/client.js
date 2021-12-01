@@ -1,10 +1,3 @@
-/* let store = {
-    user: { name: "Joe" },
-    apod: '',
-    rovers: [],
-    activeTab: ''
-} */
-
 let store = Immutable.Map({
     user: Immutable.Map({ name: "Joe" }),
     apod: '',
